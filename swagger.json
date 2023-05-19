@@ -1,0 +1,49 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "SUPA-MENU APIs",
+      "version": "1.0.0",
+      "description": "API documentation for Your App"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000"
+      }
+    ],
+    "paths": {
+      "/users": {
+        "get": {
+          "summary": "Get all users",
+          "responses": {
+            "200": {
+              "description": "Successful response"
+            }
+          }
+        }
+      },
+      "/users/{id}": {
+        "get": {
+          "summary": "Get a user by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      }
+    }
+  }
+  
