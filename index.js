@@ -2,16 +2,17 @@ const authRoutes = require('./routes/auth.controller')
 const express = require('express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-
+const cors = require('cors')
 
 const connectToDB = require('./models/db'); 
 const documentation = require('./swagger.json')
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(authRoutes)
-
+app.options('*', cors())
 
 // Swagger options
 const options = {

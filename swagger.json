@@ -5,41 +5,52 @@
       "version": "1.0.0",
       "description": "API documentation for Your App"
     },
+    "tags" : [
+      {
+        "name": "Users",
+        "description" : "Operations related to users"
+      }
+    ]  ,
     "servers": [
       {
         "url": "http://localhost:3000"
       }
     ],
     "paths": {
-      "/users": {
-        "get": {
-          "summary": "Get all users",
-          "responses": {
-            "200": {
-              "description": "Successful response"
-            }
-          }
-        }
-      },
-      "/users/{id}": {
-        "get": {
-          "summary": "Get a user by ID",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
+      "/signup": {
+        "post" : {
+          "summary" : "Save user",
+          "tags": ["Users"],
+          "requestBody" : {
+            "required" : true,
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
               }
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response"
+          },
+          "produces" : ["application/json"]
+        }
+      }
+    },
+    "components" : {
+      "schemas" : {
+        "User" : {
+          "type" : "object",
+          "properties" : {
+            "phoneNumber" : {
+              "type" : "string",
+              "required" : true 
             },
-            "404": {
-              "description": "User not found"
+            "fullName" : {
+              "type" : "string",
+              "required" : true
+            },
+            "email" : {
+              "type" : "string",
+              "required" : true
             }
           }
         }

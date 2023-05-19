@@ -4,15 +4,29 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
+const  validateEmail  = require('../utils/validateEmail');
 
 // Sign up route
 router.post('/signup', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, fullName, phoneNumber } = req.body;
 
     // Validate input
-    if (!email || !password) {
+    if (email == undefined || fullName == undefined || phoneNumber == undefined) {
       return res.status(400).json({ message: 'Email and password are required' });
+    }
+
+    if(fullName < 3){
+      return res.status(400).json({ message: 'Full name is invalid' });
+    }
+
+    if(!validateEmail(email)){
+      console.log(email)
+      return res.status(400).json({ message: 'Email is invalid' })
+    }
+
+    if(phoneNumber.length != 10){
+      return res.status(400).json({ message: 'Phone Number is invalid' })
     }
 
     // Check if user already exists
