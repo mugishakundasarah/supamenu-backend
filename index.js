@@ -8,11 +8,14 @@ const connectToDB = require('./models/db');
 const documentation = require('./swagger.json')
 
 const app = express();
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  preflightContinue: false     
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(authRoutes)
-app.options('*', cors())
+app.use('/', authRoutes)
 
 // Swagger options
 const options = {

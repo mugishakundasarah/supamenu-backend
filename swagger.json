@@ -1,60 +1,195 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "SUPA-MENU APIs",
-      "version": "1.0.0",
-      "description": "API documentation for Your App"
-    },
-    "tags" : [
-      {
-        "name": "Users",
-        "description" : "Operations related to users"
-      }
-    ]  ,
-    "servers": [
-      {
-        "url": "http://localhost:3000"
-      }
-    ],
-    "paths": {
-      "/signup": {
-        "post" : {
-          "summary" : "Save user",
-          "tags": ["Users"],
-          "requestBody" : {
-            "required" : true,
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/User"
-                }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SUPA-MENU APIs",
+    "version": "1.0.0",
+    "description": "API documentation for Your App"
+  },
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Operations related to users"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/signup": {
+      "post": {
+        "summary": "Save user",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
               }
             }
-          },
-          "produces" : ["application/json"]
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User saved successfully",
+            "content": {
+              "application/json": {}
+            }
+          }
         }
       }
     },
-    "components" : {
-      "schemas" : {
-        "User" : {
-          "type" : "object",
-          "properties" : {
-            "phoneNumber" : {
-              "type" : "string",
-              "required" : true 
-            },
-            "fullName" : {
-              "type" : "string",
-              "required" : true
-            },
-            "email" : {
-              "type" : "string",
-              "required" : true
+    "/signin": {
+      "post": {
+        "summary": "Signin",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User signin successful",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/users" : {
+      "get" : {
+        "summary": "Get users",
+        "tags": ["Users"],
+        "responses": { 
+          "200": {
+            "description": "User retrieved successfully",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/restaurants": {
+      "post": {
+        "summary": "Save restaurants",
+        "tags": ["Restaurants"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurant"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Restaurant saved successfully",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get restaurants",
+        "tags": ["Restaurants"],
+        "responses": {
+          "200": {
+            "description": "List of restaurants",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update restaurants",
+        "tags": ["Restaurants"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restaurant"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Restaurant updated successfully",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete restaurants",
+        "tags": ["Restaurants"],
+        "responses": {
+          "200": {
+            "description": "Restaurant deleted successfully",
+            "content": {
+              "application/json": {}
             }
           }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "type": "string",
+            "required": true
+          },
+          "fullName": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "Restaurant": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "fullName": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    }
   }
-  
+}

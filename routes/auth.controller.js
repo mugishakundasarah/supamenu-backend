@@ -9,36 +9,36 @@ const  validateEmail  = require('../utils/validateEmail');
 // Sign up route
 router.post('/signup', async (req, res) => {
   try {
-    const { email, fullName, phoneNumber } = req.body;
+    const { email, fullName, password, phoneNumber } = req.body;
 
     // Validate input
-    if (email == undefined || fullName == undefined || phoneNumber == undefined) {
-      return res.status(400).json({ message: 'Email and password are required' });
+    if (email == undefined || fullName == undefined || phoneNumber == undefined, password == undefined) {
+      return res.json({ message: 'Email and password are required' });
     }
 
     if(fullName < 3){
-      return res.status(400).json({ message: 'Full name is invalid' });
+      return res.json({ message: 'Full name is invalid' });
     }
 
     if(!validateEmail(email)){
-      console.log(email)
-      return res.status(400).json({ message: 'Email is invalid' })
+      return res.json({ message: 'Email is invalid' })
     }
 
     if(phoneNumber.length != 10){
-      return res.status(400).json({ message: 'Phone Number is invalid' })
+      return res.json({ message: 'Phone Number is invalid' })
     }
+
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.json({ message: 'You have already registered' });
     }
 
     // Create a new user
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ email, password: hashedPassword });
+    const newUser = new User({ email, fullName, phoneNumber, password: hashedPassword });
     await newUser.save();
 
     res.status(201).json({ message: 'User created successfully' });
@@ -47,6 +47,16 @@ router.post('/signup', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+router.get('/users',async (req, res) => {
+  try {
+    let users = await User.find()
+    return res.status(200).json(users);
+  } catch (error) {
+      console.error('Error getting all users:', error);
+      res.status(500).json({ message: 'Internal server error' }); 
+  }
+})
 
 // Sign in route
 router.post('/signin', async (req, res) => {
