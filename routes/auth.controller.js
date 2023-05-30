@@ -13,7 +13,7 @@ router.post('/signup', async (req, res) => {
 
     // Validate input
     if (email == undefined || fullName == undefined || phoneNumber == undefined, password == undefined) {
-      return res.json({ message: 'Email and password are required' });
+      return res.json({ message: 'Email and passwo rd are required' });
     }
 
     if(fullName < 3){
@@ -63,6 +63,7 @@ router.post('/signin', async (req, res) => {
   try {
     const { email, password } = req.body;
 
+
     // Validate input
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required' });
@@ -81,9 +82,8 @@ router.post('/signin', async (req, res) => {
     }
 
     // Generate and sign a JWT token
-    const token = jwt.sign({ email: user.email }, 'your-secret-key');
-
-    res.status(200).json({ token });
+    const token = jwt.sign({ user } , process.env.JWT_SECRET_KEY, { expiresIn: '1h'});
+    return res.status(200).json({ token });
   } catch (error) {
     console.error('Error signing in:', error);
     res.status(500).json({ message: 'Internal server error' });

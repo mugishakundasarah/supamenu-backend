@@ -7,8 +7,8 @@
   },
   "tags": [
     {
-      "name": "Users",
-      "description": "Operations related to users"
+      "name": "Authentication-controller",
+      "description": "Operations related to Authentication"
     }
   ],
   "servers": [
@@ -20,7 +20,7 @@
     "/signup": {
       "post": {
         "summary": "Save user",
-        "tags": ["Users"],
+        "tags": ["Authentication-controller"],
         "requestBody": {
           "required": true,
           "content": {
@@ -44,13 +44,27 @@
     "/signin": {
       "post": {
         "summary": "Signin",
-        "tags": ["Users"],
+        "tags": ["Authentication-controller"],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "email" : {
+                      "type" : {
+                        "type" : "string",
+                        "required" : true
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -65,10 +79,10 @@
         }
       }
     },
-    "/users" : {
+    "/Authentication-controller" : {
       "get" : {
-        "summary": "Get users",
-        "tags": ["Users"],
+        "summary": "Get Authentication-controller",
+        "tags": ["Authentication-controller"],
         "responses": { 
           "200": {
             "description": "User retrieved successfully",
@@ -189,6 +203,13 @@
             "required": true
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
