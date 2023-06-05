@@ -7,9 +7,21 @@
   },
   "tags": [
     {
-      "name": "Authentication-controller",
-      "description": "Operations related to Authentication"
-    }
+      "name": "authentication-controller",
+      "description": "Operations related to authentication"
+    },
+    {
+      "name": "user-controller",
+      "description": "Operations related to users"
+    },
+    {
+      "name": "restaurant-controller",
+      "description": "Operations related to restaurants"
+    },
+    {
+      "name": "menu-controller",
+      "description": "Operations related to menus"
+    }    
   ],
   "servers": [
     {
@@ -17,10 +29,10 @@
     }
   ],
   "paths": {
-    "/signup": {
+    "/auth/signup": {
       "post": {
         "summary": "Save user",
-        "tags": ["Authentication-controller"],
+        "tags": ["authentication-controller"],
         "requestBody": {
           "required": true,
           "content": {
@@ -41,10 +53,10 @@
         }
       }
     },
-    "/signin": {
+    "/auth/signin": {
       "post": {
         "summary": "Signin",
-        "tags": ["Authentication-controller"],
+        "tags": ["authentication-controller"],
         "requestBody": {
           "required": true,
           "content": {
@@ -79,30 +91,28 @@
         }
       }
     },
-    "/Authentication-controller" : {
-      "get" : {
-        "summary": "Get Authentication-controller",
-        "tags": ["Authentication-controller"],
-        "responses": { 
-          "200": {
-            "description": "User retrieved successfully",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/restaurants": {
+    "/restaurant": {
       "post": {
-        "summary": "Save restaurants",
-        "tags": ["Restaurants"],
+        "summary": "Save restaurant",
+        "tags": ["restaurant-controller"],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Restaurant"
+                "type": "object",
+                "properties": {
+                  "restaurantData": {
+                    "$ref": "#/components/schemas/Restaurant"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
               }
             }
           }
@@ -118,7 +128,7 @@
       },
       "get": {
         "summary": "Get restaurants",
-        "tags": ["Restaurants"],
+        "tags": ["restaurant-controller"],
         "responses": {
           "200": {
             "description": "List of restaurants",
@@ -130,7 +140,7 @@
       },
       "put": {
         "summary": "Update restaurants",
-        "tags": ["Restaurants"],
+        "tags": ["restaurant-controller"],
         "requestBody": {
           "required": true,
           "content": {
@@ -152,10 +162,56 @@
       },
       "delete": {
         "summary": "Delete restaurants",
-        "tags": ["Restaurants"],
+        "tags": ["restaurant-controller"],
         "responses": {
           "200": {
             "description": "Restaurant deleted successfully",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/restaurant/{restaurantId}": {
+      "post": {
+        "summary": "Create a new menu item",
+        "tags": [
+          "menu-controller"
+        ],
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "description": "ID of the restaurant to save the item",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "menuData": {
+                    "$ref": "#/components/schemas/MenuItem"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format" : "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Menu item created successfully",
             "content": {
               "application/json": {}
             }
@@ -192,15 +248,55 @@
         "properties": {
           "name": {
             "type": "string",
-            "required": true
+            "unique": true
           },
           "fullName": {
-            "type": "string",
-            "required": true
+            "type": "string"
           },
-          "email": {
+          "phoneNumber": {
+            "type": "string"
+          },
+          "ownerName": {
+            "type": "string"
+          },
+          "ownerPhoneNumber": {
+            "type": "string"
+          },
+          "ownerEmail": {
+            "type": "string"
+          },
+          "category": {
             "type": "string",
-            "required": true
+            "enum": ["restaurant" , "pub", "hotel", "coffeeshop", "other"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "openingHours": {
+            "type": "string"
+          },
+          "closingHours": {
+            "type": "string"
+          } 
+        },
+        "required" : ["name", "fullName", "phoneNumber", "ownerName", "ownerEmail", "category", "description", "openingHours", "closingHours"]
+      },
+      "MenuItem": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "unique": true
+          },
+          "price": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Drink", "Starter", "Appetizer", "Dessert", "Main"]
           }
         }
       }

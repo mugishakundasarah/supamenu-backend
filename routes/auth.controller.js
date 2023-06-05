@@ -66,24 +66,24 @@ router.post('/signin', async (req, res) => {
 
     // Validate input
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+      return res.json({ message: 'Email and password are required' , status: 400});
     }
 
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.json({ message: 'User not found' , status: 401});
     }
 
     // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid password' });
+      return res.json({ message: 'Invalid password', status: 401});
     }
 
     // Generate and sign a JWT token
     const token = jwt.sign({ user } , process.env.JWT_SECRET_KEY, { expiresIn: '1h'});
-    return res.status(200).json({ token });
+    return res.status(201).json({ token, user });
   } catch (error) {
     console.error('Error signing in:', error);
     res.status(500).json({ message: 'Internal server error' });
