@@ -11,17 +11,17 @@
       "description": "Operations related to authentication"
     },
     {
-      "name": "user-controller",
-      "description": "Operations related to users"
-    },
-    {
       "name": "restaurant-controller",
       "description": "Operations related to restaurants"
     },
     {
       "name": "menu-controller",
       "description": "Operations related to menus"
-    }    
+    },
+    {
+      "name" : "table-controller",
+      "description" : "Operation related to a restaurant table"
+    }   
   ],
   "servers": [
     {
@@ -98,25 +98,13 @@
         "requestBody": {
           "required": true,
           "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "restaurantData": {
-                    "$ref": "#/components/schemas/Restaurant"
-                  },
-                  "images": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  }
+            "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Restaurant"
                 }
               }
             }
-          }
-        },
+          },
         "responses": {
           "200": {
             "description": "Restaurant saved successfully",
@@ -173,7 +161,54 @@
         }
       }
     },
-    "/restaurant/{restaurantId}": {
+
+    "/restaurant/{restaurantId}/uploadFiles": {
+      "post": {
+        "summary": "Upload images of the resturant",
+        "tags": [
+          "restaurant-controller"
+        ],
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "description": "ID of the restaurant to save the item",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "images" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string",
+                      "format" : "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Menu item created successfully",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/restaurant/{restaurantId}/menu": {
       "post": {
         "summary": "Create a new menu item",
         "tags": [
@@ -193,18 +228,9 @@
         "requestBody": {
           "required": true,
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "menuData": {
                     "$ref": "#/components/schemas/MenuItem"
-                  },
-                  "image": {
-                    "type": "string",
-                    "format" : "binary"
-                  }
-                }
               }
             }
           }
@@ -215,6 +241,237 @@
             "content": {
               "application/json": {}
             }
+          }
+        }
+      }
+    },
+    "/restaurant/{restaurantId}" : {
+      "get": {
+        "summary": "Get restaurant",
+        "tags": ["restaurant-controller"],
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "description": "ID of the restaurant to save the item",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get restaurant",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/restaurant/{menuId}/uploadFile" : {
+      "post": {
+        "summary": "Upload image of menu item",
+        "tags": [
+          "menu-controller"
+        ],
+        "consumes" : ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "menuId",
+            "in": "path",
+            "description": "ID of the menu item",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image" : {
+                      "type" : "string",
+                      "format" : "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Menu item picture uploaded successfully",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/restaurant/tables": {
+      "post": {
+        "tags": [
+          "table-controller"
+        ],
+        "summary": "Create a new table",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "table",
+            "description": "Table object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tableNumber": {
+                  "type": "number",
+                  "required": true
+                },
+                "restaurantId": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Table"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "table-controller"
+        ],
+        "summary": "Get all tables",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Table"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "restaurant/tables/{id}": {
+      "get": {
+        "tags": [
+          "table-controller"
+        ],
+        "summary": "Get a specific table by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Table"
+            }
+          },
+          "404": {
+            "description": "Table not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "table-controller"
+        ],
+        "summary": "Update a table",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "table",
+            "description": "Table object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tableNumber": {
+                  "type": "number",
+                  "required": true
+                },
+                "restaurantId": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Table"
+            }
+          },
+          "404": {
+            "description": "Table not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "table-controller"
+        ],
+        "summary": "Delete a table",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Table not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -240,6 +497,11 @@
           "password": {
             "type": "string",
             "required": true
+          },
+          "role": {
+            "type": "string",
+            "required": true,
+            "enum": ["RESTAURANT_MANAGER", "CLIENT"]
           }
         }
       },
@@ -299,14 +561,33 @@
             "enum": ["Drink", "Starter", "Appetizer", "Dessert", "Main"]
           }
         }
+      },
+      "Table": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "tableNumber": {
+            "type": "number"
+          },
+          "restaurantId": {
+            "type": "string"
+          }
+        }
       }
     },
     "securitySchemes": {
-      "BearerAuth": {
+      "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
       }
     }
-  }
+  }, 
+  "security" : [
+    {
+      "bearerAuth" : []
+    }
+  ]
 }

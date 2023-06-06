@@ -48,9 +48,7 @@ const restaurantSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
-  menus: {
-    type: Array
-  }
+  menus: [{type: mongoose.Schema.Types.ObjectId, ref: 'MenuItem'}]
 
 });
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);

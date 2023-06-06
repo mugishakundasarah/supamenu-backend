@@ -19,4 +19,18 @@ module.exports.MenuValidationSchema = Joi.object({
     price: Joi.number().required(),
     description: Joi.string().required(),
     category: Joi.string().valid('Drink', 'Starter', 'Appetizer', 'Dessert', 'Main').required()
-  });
+});
+
+module.exports.UserValidationSchema = Joi.object({
+  email: Joi.string().email().required(),
+  fullName: Joi.string().required(),
+  phoneNumber:  Joi.string().length(10).pattern(/^0[0-9]{9}$/).required(),
+  password: Joi.string().required(),
+  role: Joi.string().valid('RESTAURANT_MANAGER', 'CLIENT').required()
+});
+
+module.exports.LoginValidationSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required() 
+})
+
